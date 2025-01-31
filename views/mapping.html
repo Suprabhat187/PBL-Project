@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>Admin Dashboard - Faculty Student Mapping</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+    <link href="css/responsive.css" rel="stylesheet" />
+  </head>
+  <body class="sub_page">
+    <div class="hero_area">
+      <header class="header_section">
+        <div class="container-fluid">
+          <nav class="navbar navbar-expand-lg custom_nav-container">
+            <a class="navbar-brand" href="coordinatordash.html">
+              <span>SCHS LOGO</span>
+            </a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+            >
+              <span class=""></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="coordinatordash.html">Home</a>
+                  <li class="nav-item">
+                    <a class="nav-link" href="mapping.html">Student and form access</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="addfaculty.html">Add faculty data</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="addstudent.html">Add Student Data</a>
+                  </li>
+                </ul>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </header>
+    </div>
+
+    <section class="admin_section layout_padding">
+      <div class="container">
+        <div class="heading_container">
+          <h2>Map Faculty to Students</h2>
+        </div>
+        <form action="#" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="facultyId">Faculty ID</label>
+            <input
+              type="text"
+              class="form-control"
+              id="facultyId"
+              name="facultyId"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="studentFile">Upload Student List (Excel)</label>
+            <input
+              type="file"
+              class="form-control"
+              id="studentFile"
+              name="studentFile"
+              accept=".xls,.xlsx"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label>Select Forms Accessible:</label><br />
+            <input type="checkbox" name="forms[]" value="Form 1" /> Form 1<br />
+            <input type="checkbox" name="forms[]" value="Form 2" /> Form 2<br />
+            <input type="checkbox" name="forms[]" value="Form 3" /> Form 3<br />
+            <input type="checkbox" name="forms[]" value="Form 4" /> Form 4<br />
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </section>
+
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/custom.js"></script>
+  </body>
+</html>
