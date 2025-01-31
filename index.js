@@ -18,16 +18,16 @@ app.get('/',(req, res)=>{
     res.render("coordinatordash.ejs");
 })
 app.get("/addstudent", (req, res) => {
-    res.render("addstudent"); // Ensure "addstudent.ejs" is in your views folder
+    res.render("addstudent"); 
   });
   app.get("/addfaculty", (req, res) => {
-    res.render("addfaculty"); // Ensure "addstudent.ejs" is in your views folder
+    res.render("addfaculty"); 
   });
   app.get("/mapping", (req, res) => {
-    res.render("mapping"); // Ensure "addstudent.ejs" is in your views folder
+    res.render("mapping"); 
   });
   app.get("/coordinatordash", (req, res) => {
-    res.render("coordinatordash"); // Ensure "addstudent.ejs" is in your views folder
+    res.render("coordinatordash"); 
   });
  
   
