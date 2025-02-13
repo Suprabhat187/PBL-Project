@@ -17,6 +17,22 @@
     <link href="/css/font-awesome.min.css" rel="stylesheet" />
     <link href="/css/style.css" rel="stylesheet" />
     <link href="/css/responsive.css" rel="stylesheet" />
+    <style>
+      /* Add more space without centering */
+      .admin_section {
+        padding: 50px; /* Increased padding */
+      }
+      .heading_container {
+        margin-bottom: 30px; /* More space below the heading */
+      }
+      .form-group {
+        margin-bottom: 20px; /* More space between form fields */
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    </style>
   </head>
   <body class="sub_page">
     <div class="hero_area">
@@ -24,7 +40,7 @@
         <div class="container-fluid">
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <a class="navbar-brand" href="/coordinatordash">
-              <span>SCHS LOGO</span>
+              <span></span>
             </a>
             <button
               class="navbar-toggler"
@@ -40,15 +56,15 @@
                   <a class="nav-link" href="/coordinatordash">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/mapping"
-                    >Student and form access</a
-                  >
-                </li>
-                <li class="nav-item">
                   <a class="nav-link" href="/addfaculty">Add Faculty Data</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/addstudent">Add Student Data</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/mapping"
+                    >Student and faculty mapping</a
+                  >
                 </li>
               </ul>
             </div>
@@ -57,7 +73,7 @@
       </header>
     </div>
 
-    <section class="admin_section layout_padding">
+    <section class="admin_section">
       <div class="container">
         <div class="heading_container">
           <h2>Add Faculty Data</h2>

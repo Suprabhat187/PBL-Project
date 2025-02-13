@@ -8,16 +8,32 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <title>Admin Dashboard - Add Student Data</title>
-
+    
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/bootstrap.css" />
     <link
-      rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
     />
-    <link rel="stylesheet" href="/css/font-awesome.min.css" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/responsive.css" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/responsive.css" rel="stylesheet" />
+    
+    <style>
+      .admin_section {
+        padding: 50px;
+      }
+      .heading_container {
+        margin-bottom: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+      }
+    </style>
   </head>
 
   <body class="sub_page">
@@ -27,7 +43,7 @@
         <div class="container-fluid">
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <a class="navbar-brand" href="/coordinatordash">
-              <span>SCHS LOGO</span>
+              <span></span>
             </a>
             <button
               class="navbar-toggler"
@@ -43,9 +59,7 @@
                   <a class="nav-link" href="/coordinatordash">Home</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/mapping"
-                    >Student and form access</a
-                  >
+                  <a class="nav-link" href="/mapping">Student and form access</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="/addfaculty">Add Faculty Data</a>
@@ -61,16 +75,12 @@
     </div>
 
     <!-- Admin Section -->
-    <section class="admin_section layout_padding">
+    <section class="admin_section">
       <div class="container">
         <div class="heading_container">
           <h2>Add Student Data</h2>
         </div>
-        <form
-          action="/upload-student-data"
-          method="post"
-          enctype="multipart/form-data"
-        >
+        <form action="/upload-student-data" method="post" enctype="multipart/form-data">
           <div class="form-group">
             <label for="studentFile">Upload Student List (Excel)</label>
             <input
@@ -89,6 +99,7 @@
 
     <!-- Scripts -->
     <script src="/js/jquery-3.4.1.min.js"></script>
-    <
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/custom.js"></script>
   </body>
 </html>

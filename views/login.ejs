@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        /* Add some basic styles for better spacing and layout */
+        .login-section select {
+            width: 100%; /* Full width for the dropdown */
+            padding: 10px; /* Padding for the dropdown */
+            margin: 10px 0; /* Space between elements */
+            border: 1px solid #ccc; /* Border for the dropdown */
+            border-radius: 5px; /* Rounded corners for the dropdown */
+            font-size: 16px; /* Font size */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left Section (Login Form) -->
+        <div class="login-section">
+            <img src="/images/cllg.png" alt="Logo" class="logo">
+            <h2>Log in to your account</h2>
+
+            <% if (error) { %>
+                <p class="error-message"><%= error %></p>
+            <% } %>
+
+            <form action="/login" method="POST">
+                <% if (typeof error !== "undefined" && error) { %>
+                    <p class="error-message"><%= error %></p>
+                <% } %>
+                <input type="text" name="username" placeholder="Enter your name" required>
+                <input type="password" name="password" placeholder="Enter password" required>
+                
+                <!-- Dropdown for Role Selection -->
+                <select name="role" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option value="admin">Admin</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="coordinator">Coordinator</option>
+                    <option value="HOD">HOD</option>
+                </select>
+                
+                <button type="submit" class="login-btn">Log In</button>
+            </form>            
+            
+            <p>Don’t have an account? <a href="#">Create an account</a></p>
+        </div>
+
+        <!-- Right Section (Illustration) -->
+        <div class="illustration-section"></div>
+    </div>
+</body>
+</html>

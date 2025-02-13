@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Data</title>
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/responsive.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f8f8;
+            text-align: center;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        header {
+            width: 100%;
+            background: #020230;
+            padding: 10px 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        nav {
+            display: flex;
+            justify-content: flex-end; /* Shift navigation to the right */
+            align-items: center;
+        }
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+        .nav-item a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-top: 60px; /* Prevent content from hiding under navbar */
+        }
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #020230;
+            color: white;
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #020230;
+            color: white;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <main>
+        <h1>Student Data</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student ID</th>
+                    <th>Student Name</th>
+                    <th>Semester</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (studentList && Array.isArray(studentList) && studentList.length > 0) { %>
+                    <% studentList.forEach((row) => { %>
+                        <tr>
+                            <td><%= row.student_id || 'N/A' %></td>
+                            <td><%= row.student_name || 'N/A' %></td>
+                            <td><%= row.semester || 'N/A' %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3">No student data available</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="displayYear"></span> All Rights Reserved.</p>
+    </footer>
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script src="/js/custom.js"></script>
+</body>
+</html>
