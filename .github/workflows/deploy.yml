@@ -1,4 +1,4 @@
-name: CI/CD Pipeline for Node.js + MySQL App
+name: CI/CD Pipeline for Cliniq(PBL-II Project)
 
 on:
   push:
@@ -45,4 +45,3 @@ jobs:
           DB_PASS: ${{ secrets.DB_PASS }}
           DB_NAME: ${{ secrets.DB_NAME }}
 
- 
