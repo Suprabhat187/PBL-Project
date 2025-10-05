@@ -1,0 +1,51 @@
+---
+- name: Configure Node.js + MySQL environment
+  hosts: local
+  become: yes
+
+  vars:
+    app_user: devopsuser
+    app_dir: /home/devopsuser/app
+
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+
+    - name: Install MySQL client
+      apt:
+        name: mysql-client
+        state: present
+
+    - name: Create application user
+      user:
+        name: "{{ app_user }}"
+        state: present
+        shell: /bin/bash
+
+    - name: Create application directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0755'
+
+    - name: Deploy sample index.js file
+      copy:
+        content: |
+          console.log("Hello from Ansible-deployed app!");
+        dest: "{{ app_dir }}/index.js"
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
+        mode: '0644'
