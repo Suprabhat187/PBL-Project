@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<% if (!user || user.role !== "coordinator") { %>
+<script>
+  alert("❌ Access Denied: Please log in as Coordinator.");
+  window.location.href = "/login";
+</script>
+<% } %>
 <html>
   <head>
     <!-- Basic -->
@@ -19,12 +25,165 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <style>
+      .stepper-container {
+        width: 100%;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: transparent;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
+      
+      .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        position: relative;
+      }
+      
+      .stepper-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+      }
+      
+      .step-counter {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: #e0e0e0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 6px;
+        z-index: 10;
+      }
+      
+      .step-counter i {
+        color: white;
+        font-size: 14px;
+      }
+      
+      .step-line {
+        position: absolute;
+        top: 15px;
+        left: 55%;
+        width: 90%;
+        height: 2px;
+        background-color: #e0e0e0;
+        z-index: 5;
+      }
+      
+      .stepper-item:last-child .step-line {
+        display: none;
+      }
+      
+      .step-content {
+        text-align: center;
+        padding-top: 10px;
+        width: 100%;
+      }
+      
+      .step-number {
+        font-size: 12px;
+        color: #777;
+        margin-bottom: 5px;
+        font-weight: 500;
+      }
+      
+      .step-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #fffefe;
+        margin-bottom: 4px;
+      }
+      
+      .step-status {
+        font-size: 14px;
+        font-weight: 400;
+      }
+      
+      /* Completed step */
+      .stepper-item.completed .step-counter {
+        background-color: #004896;
+      }
+      
+      .stepper-item.completed .step-line {
+        background-color: #004896;
+      }
+      
+      .stepper-item.completed .step-status {
+        color: #9fbad7;
+      }
+      
+      /* Active step */
+      .stepper-item.active .step-counter {
+        background-color: #2979ff;
+        border: 2px solid #2979ff;
+      }
+      
+      .stepper-item.active .step-line {
+        background-color: #2979ff;
+      }
+      
+      .stepper-item.active .step-status {
+        color: #2979ff;
+      }
+      
+      /* Pending steps */
+      .stepper-item:not(.completed):not(.active) .step-status {
+        color: #777;
+      }
+      
+      @media (max-width: 768px) {
+        .stepper-wrapper {
+          flex-direction: column;
+          gap: 30px;
+        }
+        
+        .step-line {
+          position: absolute;
+          top: 30px;
+          left: 15px;
+          width: 2px;
+          height: 30px;
+          transform: none;
+        }
+        
+        .stepper-item {
+          align-items: flex-start;
+          width: 100%;
+        }
+        
+        .step-content {
+          text-align: left;
+          margin-left: 15px;
+        }
+      }
+    </style>
+    <style>
+      .logged-in-info {
+          background: rgba(200, 200, 200, 0.3);
+          padding: 6px 12px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 500;
+          margin-left: 15px;
+          color: white;
+      }
+    </style>
 
     <!-- Fonts style -->
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
+    
 
     <!-- Font Awesome -->
     <link href="/css/font-awesome.min.css" rel="stylesheet" />
@@ -33,141 +192,140 @@
     <link href="/css/style.css" rel="stylesheet" />
     <!-- Responsive styles -->
     <link href="/css/responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   </head>
 
   <body>
     <div class="hero_area">
-      <!-- Header section -->
       <header class="header_section">
         <div class="container-fluid">
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <a class="navbar-brand" href="/coordinatordash">
-              <span></span>
+              <span>
+                <img src="/images/symbilogo.jpg" alt="Logo" class="logo" style="width: 50px; height: auto" />
+              </span>
             </a>
-
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class=""> </span>
-            </button>
-
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <% if (user) { %>
+                <span class="logged-in-info">Logged in as: <%= user.email %></span>
+              <% } %>
+              <a class="navbar-brand" href="/"> </a>
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="/coordinatordash">
-                    Home <span class="sr-only">(current)</span>
-                  </a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/coordinatordash">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewmapping">View Mapping</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewfacultycoord">Faculty Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewstudent">Student Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="/download-excel">Download Excel Format</a></li>
                 <li class="nav-item">
-                  <a class="nav-link" href="/addfaculty">Add faculty data</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/addstudent">Add Student Data</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/mapping"
-                    >Student and faculty mapping</a
-                  >
-                </li>
+                  <a class="nav-link" href="#" onclick="confirmLogout()">Logout</a>
+              </li>
               </ul>
-              <div class="quote_btn-container">
-                <form class="form-inline">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </form>
-              </div>
             </div>
           </nav>
         </div>
       </header>
-      <!-- End header section -->
 
-      <!-- Slider section -->
       <section class="slider_section">
-        <div id="customCarousel1" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active">
-              <div class="container">
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="detail-box">
-                      <h1>
-                        Welcome to <br />
-                        Coordinator Dashboard
-                      </h1>
-                      <p>
-                        "Streamline coordination, manage tasks effortlessly, and stay in control."
-                      </p>
-                      <div class="btn-box">
-                        <a href="#" class="btn-1"> Read More </a>
-                        <a href="#" class="btn-2"> Contact Us </a>
-                      </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="detail-box">
+                <h1 style="font-size: 3rem; font-weight: bold;">
+                  Welcome to <br />
+                  Coordinator Dashboard
+                </h1> 
+                <p>Manage students, faculty, and skill mappings.</p>
+
+                <div class="stepper-container">
+                  <div class="stepper-wrapper">
+                
+                    <!-- Step 1: Add Students -->
+                  <a href="/addstudent" class="stepper-item <%= studentCount > 0 ? 'completed' : '' %>">
+                    <div class="step-counter">
+                      <%- studentCount > 0 ? '<i class="fas fa-check"></i>' : '1' %>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="img-box">
-                      <img src="/images/slider-img.png" alt="" />
+                    <div class="step-line"></div>
+                    <div class="step-content">
+                      <div class="step-number">STEP 1</div>
+                      <div class="step-title">Add Students</div>
+                      <div class="step-status"><%= studentCount > 0 ? 'Completed' : 'Not Completed' %></div>
                     </div>
+                  </a>
+
+                  <!-- Step 2: Add Faculty -->
+                  <a href="javascript:void(0);" 
+                    class="stepper-item <%= facultyCount > 0 ? 'completed' : (studentCount > 0 ? 'active' : '') %>" 
+                    onclick="handleNavigation(1, <%= studentCount > 0 %>, '/addfaculty')">
+                    <div class="step-counter">
+                      <%- facultyCount > 0 ? '<i class="fas fa-check"></i>' : '2' %>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step-content">
+                      <div class="step-number">STEP 2</div>
+                      <div class="step-title">Add Faculty</div>
+                      <div class="step-status"><%= facultyCount > 0 ? 'Completed' : 'Not Completed' %></div>
+                    </div>
+                  </a>
+
+                  <!-- Step 3: Mapping -->
+                  <a href="javascript:void(0);" 
+                    class="stepper-item <%= mappingCount > 0 ? 'completed' : (studentCount > 0 && facultyCount > 0 ? 'active' : '') %>" 
+                    onclick="handleNavigation(2, <%= studentCount > 0 && facultyCount > 0 %>, '/mapping')">
+                    <div class="step-counter">
+                      <%- mappingCount > 0 ? '<i class="fas fa-check"></i>' : '3' %>
+                    </div>
+                    <div class="step-content">
+                      <div class="step-number">STEP 3</div>
+                      <div class="step-title">Mapping</div>
+                      <div class="step-status"><%= mappingCount > 0 ? 'Completed' : 'Not Completed' %></div>
+                    </div>
+                  </a>
                   </div>
                 </div>
+
+
+
+                </div>
+                
+
+            </div>
+            <div class="col-md-6">
+              <div class="img-box">
+                <img src="/images/slider-img.png" alt="" />
               </div>
             </div>
           </div>
         </div>
       </section>
-      <!-- End slider section -->
     </div>
-
-    <!-- Contact section -->
-    <section class="contact_section layout_padding-bottom">
-      <div class="container">
-        <div class="heading_container heading_center">
-          <h2>Get In Touch</h2>
-        </div>
-        <div class="row">
-          <div class="col-md-8 col-lg-6 mx-auto">
-            <div class="form_container">
-              <form action="">
-                <div><input type="text" placeholder="Your Name" /></div>
-                <div><input type="email" placeholder="Your Email" /></div>
-                <div><input type="text" placeholder="Your Phone" /></div>
-                <div>
-                  <input
-                    type="text"
-                    class="message-box"
-                    placeholder="Message"
-                  />
-                </div>
-                <div class="btn_box"><button>SEND</button></div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-    <!-- End contact section -->
-
-    <!-- Footer section -->
-    <footer class="footer_section">
-      <div class="container">
-        <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Free Html Templates</a>
-        </p>
-      </div>
-    </footer>
-    <!-- End footer section -->
-
-    <!-- jQuery -->
+    <script>
+      function checkStepCompletion(step, isCompleted) {
+        if (!isCompleted) {
+          alert(`Complete Step ${step} first.`);
+          return false;
+        }
+        return true;
+      }
+    
+      function handleNavigation(step, requiredStepCompleted, url) {
+        if (!requiredStepCompleted) {
+          alert(`Complete Step ${step} first.`);
+          return false;
+        }
+        window.location.href = url;
+      }
+    </script>
+    
     <script src="/js/jquery-3.4.1.min.js"></script>
-    <!-- Bootstrap JS -->
     <script src="/js/bootstrap.js"></script>
-    <!-- Custom JS -->
     <script src="/js/custom.js"></script>
+    <script>
+      function confirmLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+          window.location.href = "/logout";
+      }
+  }
+  </script>
   </body>
-</html>
+  </html>

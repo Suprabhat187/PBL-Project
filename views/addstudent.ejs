@@ -3,35 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>Admin Dashboard - Add Student Data</title>
-    
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="/css/bootstrap.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
     <link href="/css/font-awesome.min.css" rel="stylesheet" />
     <link href="/css/style.css" rel="stylesheet" />
     <link href="/css/responsive.css" rel="stylesheet" />
-    
     <style>
-      .admin_section {
-        padding: 50px;
+      body {
+        background-color: #020230;
+        color: #020230;
       }
-      .heading_container {
-        margin-bottom: 30px;
+      .container-box {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        color: black;
+        max-width: 600px;
+        margin: 50px auto;
       }
-      .form-group {
+      h2 {
+        text-align: center;
         margin-bottom: 20px;
-      }
-      .btn {
-        padding: 10px 20px;
-        font-size: 16px;
+        color: #020230;
       }
     </style>
   </head>
@@ -43,30 +41,20 @@
         <div class="container-fluid">
           <nav class="navbar navbar-expand-lg custom_nav-container">
             <a class="navbar-brand" href="/coordinatordash">
-              <span></span>
+              <span>
+                <img src="/images/symbilogo.jpg" alt="Logo" class="logo" style="width: 50px; height: auto" />
+              </span>
             </a>
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-            >
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
               <span class=""></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                  <a class="nav-link" href="/coordinatordash">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/mapping">Student and form access</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/addfaculty">Add Faculty Data</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/addstudent">Add Student Data</a>
-                </li>
+                <li class="nav-item"><a class="nav-link" href="/coordinatordash">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewstudent">View Student Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewmapping">View Mapping</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewfacultycoord">Faculty Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="/download-excel">Download Excel Format</a></li>
               </ul>
             </div>
           </nav>
@@ -75,24 +63,16 @@
     </div>
 
     <!-- Admin Section -->
-    <section class="admin_section">
-      <div class="container">
-        <div class="heading_container">
-          <h2>Add Student Data</h2>
-        </div>
-        <form action="/upload-student-data" method="post" enctype="multipart/form-data">
+    <section class="admin_section layout_padding">
+      <div class="container-box">
+        <h2>Add Student Data</h2>
+        <div class="heading_container"></div>
+        <form action="/upload-student" method="post" enctype="multipart/form-data">
           <div class="form-group">
             <label for="studentFile">Upload Student List (Excel)</label>
-            <input
-              type="file"
-              class="form-control"
-              id="studentFile"
-              name="studentFile"
-              accept=".xls,.xlsx"
-              required
-            />
+            <input type="file" class="form-control" id="studentFile" name="studentFile" accept=".xls,.xlsx" required />
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary btn-block">Submit</button>
         </form>
       </div>
     </section>
@@ -100,6 +80,5 @@
     <!-- Scripts -->
     <script src="/js/jquery-3.4.1.min.js"></script>
     <script src="/js/bootstrap.js"></script>
-    <script src="/js/custom.js"></script>
   </body>
 </html>

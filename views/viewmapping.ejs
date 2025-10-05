@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Admin Dashboard - View Mappings</title>
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet" />
+    <link href="/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/responsive.css" rel="stylesheet" />
+
+    <style>
+      body {
+        background-color: #121212;
+        color: white;
+      }
+      .scroll-box {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+      }
+      table {
+        color: white;
+        width: 100%;
+      }
+      .btn {
+        margin-right: 5px;
+      }
+      .btn-container {
+        margin-top: 20px;
+      }
+      .search-bar {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body class="sub_page">
+    <div class="hero_area">
+      <header class="header_section">
+        <div class="container-fluid">
+          <nav class="navbar navbar-expand-lg custom_nav-container">
+            <a class="navbar-brand" href="/coordinatordash">
+              <span>
+                <img src="/images/symbilogo.jpg" alt="Logo" class="logo" style="width: 50px; height: auto" />
+              </span>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+              <span class=""></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="/coordinatordash">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewmapping">View Mapping</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewfacultycoord">Faculty Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="/viewstudent">Student Data</a></li>
+                <li class="nav-item"><a class="nav-link" href="/download-excel">Download Excel Format</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </header>
+    </div>
+    <div class="container">
+      <h2>Faculty-Student Mapping</h2>
+
+      <input type="text" id="facultySearchStudent" class="search-bar" placeholder="Search Faculty ID"
+        onkeyup="searchTable('facultyStudentMappingTable', 'facultySearchStudent')" />
+      
+      <div class="scroll-box">
+        <table class="table table-bordered" id="facultyStudentMappingTable">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>ID</th>
+              <th>Faculty ID</th>
+              <th>Student ID</th>
+              <th>Skill ID</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% facultyStudentMapping.forEach(row => { %>
+            <tr>
+              <td><input type="checkbox" class="select-row" data-id="<%= row.id %>" /></td>
+              <td><%= row.id %></td>
+              <td><%= row.faculty_id %></td>
+              <td><%= row.student_id %></td>
+              <td><%= row.skill_id %></td>
+              <td>
+                <button class="btn btn-danger" onclick="deleteRow('<%= row.id %>', 'faculty_student_mapping')">Delete</button>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+        <button class="btn btn-warning" onclick="deleteSelected('faculty_student_mapping')">Delete Selected</button>
+        <button class="btn btn-danger" onclick="deleteAll('faculty_student_mapping')">Delete All</button>
+      </div>
+
+      <br />
+
+      <h2>Faculty-Skill Mapping</h2>
+
+      <input type="text" id="facultySearchSkill" class="search-bar" placeholder="Search Faculty ID"
+        onkeyup="searchTable('facultySkillMappingTable', 'facultySearchSkill')" />
+      
+      <div class="scroll-box">
+        <table class="table table-bordered" id="facultySkillMappingTable">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>ID</th>
+              <th>Faculty ID</th>
+              <th>Skill ID</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% facultySkillMapping.forEach(row => { %>
+            <tr>
+              <td><input type="checkbox" class="select-row" data-id="<%= row.id %>" /></td>
+              <td><%= row.id %></td>
+              <td><%= row.faculty_id %></td>    
+              <td><%= row.skill_id %></td>
+              <td>
+                <button class="btn btn-danger" onclick="deleteRow('<%= row.id %>', 'faculty_skill_mapping')">Delete</button>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+        <button class="btn btn-warning" onclick="deleteSelected('faculty_skill_mapping')">Delete Selected</button>
+        <button class="btn btn-danger" onclick="deleteAll('faculty_skill_mapping')">Delete All</button>
+      </div>
+    </div>
+
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.js"></script>
+    <script>
+        function deleteRow(id, mappingType) {
+  if (confirm("Are you sure you want to delete this row?")) {
+    const endpoint = mappingType === "faculty_skill_mapping"
+      ? `/delete-skill-mapping/${id}`
+      : `/delete-student-mapping/${id}`;
+
+    fetch(endpoint, { method: "POST" })
+      .then((response) => {
+        if (response.ok) {
+          alert("Row deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete row.");
+        }
+      })
+      .catch((error) => alert("Error: " + error.message));
+  }
+}
+
+function deleteSelected(mappingType) {
+  const tableId =
+    mappingType === "faculty_student_mapping"
+      ? "facultyStudentMappingTable"
+      : "facultySkillMappingTable";
+
+  const selectedCheckboxes = document.querySelectorAll(
+    `#${tableId} input[type="checkbox"]:checked`
+  );
+
+  const selectedIds = Array.from(selectedCheckboxes).map((checkbox) =>
+    checkbox.getAttribute("data-id")
+  );
+
+  if (selectedIds.length === 0) {
+    alert("No rows selected for deletion.");
+    return;
+  }
+
+  if (confirm("Are you sure you want to delete the selected rows?")) {
+    // ✅ Corrected endpoint URLs to match `index.js`
+    const endpoint =
+      mappingType === "faculty_student_mapping"
+        ? "/delete-selected-student-viewmapping"
+        : "/delete-selected-skill-viewmapping";
+
+    fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: selectedIds }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("Selected rows deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete selected rows.");
+        }
+      })
+      .catch((error) => alert("Error: " + error.message));
+  }
+}
+
+function deleteAll(mappingType) {
+  if (confirm("Are you sure you want to delete all rows? This action cannot be undone!")) {
+    // ✅ Corrected endpoint URLs
+    const endpoint =
+      mappingType === "faculty_student_mapping"
+        ? "/delete-all-student-viewmapping"
+        : "/delete-all-skill-viewmapping";
+
+    fetch(endpoint, {
+      method: "POST",
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("All rows deleted successfully!");
+          location.reload();
+        } else {
+          alert("Failed to delete all rows.");
+        }
+      })
+      .catch((error) => alert("Error: " + error.message));
+  }
+}
+
+
+      function searchTable(tableId, searchId) {
+        const input = document.getElementById(searchId);
+        const filter = input.value.toUpperCase();
+        const table = document.getElementById(tableId);
+        const rows = table.getElementsByTagName("tr");
+
+        for (let i = 1; i < rows.length; i++) {
+          const cells = rows[i].getElementsByTagName("td");
+          const facultyId = cells[2].textContent || cells[2].innerText;
+
+          if (facultyId.toUpperCase().indexOf(filter) > -1) {
+            rows[i].style.display = "";
+          } else {
+            rows[i].style.display = "none";
+          }
+        }
+      }
+
+      function deleteRow(id, mappingType) {
+        if (confirm("Are you sure you want to delete this row?")) {
+          fetch(`/delete-${mappingType}/${id}`, { method: "POST" })
+            .then(response => response.ok ? location.reload() : alert("Failed to delete row"))
+            .catch(error => alert("Error: " + error.message));
+        }
+      }
+    </script>
+  </body>
+</html>

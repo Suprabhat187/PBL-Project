@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Student Evaluation Form</title>
+
+    <!-- Fonts & CSS -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Poppins:200i,400&display=swap"
+    />
+    <link rel="stylesheet" href="/css/form.css" />
+
+    <style>
+      .start-button {
+        background-color: #4caf50;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin: 10px 2px;
+      }
+      .stop-button {
+        background-color: #f44336;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin: 10px 2px;
+      }
+      .back-button {
+        background-color: #333;
+        border: none;
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        margin: 10px 2px;
+      }
+      .view-results-button {
+        background-color: #333;
+        border: none;
+        color: #fff;
+        padding: 10px 30px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 6px;
+        margin: 10px 460px;
+      }
+      .navigation-buttons-container {
+        display: flex;
+        justify-content: flex-start;
+        gap: 10px;
+        margin: 10px 0;
+      }
+      .action-button {
+        margin-right: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 4px;
+        border: none;
+        color: #fff;
+      }
+      .edit-btn {
+        background-color: #2196f3; /* Blue */
+      }
+      .delete-btn {
+        background-color: #f44336; /* Red */
+      }
+      .add-question-btn {
+        background-color: #4caf50; /* Green */
+        margin-top: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1 id="title">Student Evaluation Form</h1>
+      </header>
+
+      <div class="navigation-buttons-container">
+        <!-- (Optional) Place for your back button, etc. -->
+      </div>
+
+      <form id="evaluation-form">
+        <!-- Skill Selection -->
+        <div class="form-group">
+          <label for="skill">Select Skill</label>
+          <select name="skill" id="skill" class="form-control" required>
+            <option value="" disabled selected>Loading skills...</option>
+          </select>
+        </div>
+
+        <h3 id="skill-title">Evaluation</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Q.no</th>
+              <th>Task</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="task-list">
+            <!-- Evaluation questions will be dynamically inserted here -->
+          </tbody>
+        </table>
+
+        <!-- Button to Add a New Question -->
+        <button type="button" class="action-button add-question-btn" id="add-question-btn">
+          Add Question
+        </button>
+
+        <div class="form-group">
+          <p id="timer-display"></p>
+        </div>
+
+        <!-- Submit Button (optional for your scenario) -->
+        <div class="form-group">
+          <button type="submit" class="submit-button">Submit</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const skillSelect = document.getElementById("skill");
+        const taskList = document.getElementById("task-list");
+        const addQuestionBtn = document.getElementById("add-question-btn");
+
+        // 1. Fetch all skills and populate the dropdown
+        try {
+          const skillResponse = await fetch("/api/skills");
+          if (!skillResponse.ok) throw new Error("Failed to fetch skills");
+          const skills = await skillResponse.json();
+
+          // Clear and populate skill dropdown
+          skillSelect.innerHTML = '<option value="" disabled selected>Select a skill</option>';
+          for (const skill of skills) {
+            const opt = document.createElement("option");
+            opt.value = skill.skill_id;
+            opt.textContent = skill.skill_name;
+            skillSelect.appendChild(opt);
+          }
+        } catch (error) {
+          console.error(error);
+          alert("Error loading skills. Please try again.");
+        }
+
+        // 2. On skill change, fetch questions for that skill
+        skillSelect.addEventListener("change", async () => {
+          await loadQuestionsForSkill(skillSelect.value);
+        });
+
+        // Helper: Load questions for a given skill
+        async function loadQuestionsForSkill(skillId) {
+          if (!skillId) return;
+          try {
+            const questionsResponse = await fetch(`/api/evaluation-questions?skill_id=${skillId}`);
+            if (!questionsResponse.ok) throw new Error("Failed to fetch questions");
+            const questions = await questionsResponse.json();
+
+            // Clear previous questions
+            taskList.innerHTML = "";
+
+            // Populate table with new questions
+            questions.forEach((q) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                <td>${q.Qno}</td>
+                <td>${q.Question}</td>
+                <td>
+                  <button type="button" class="action-button edit-btn" data-qno="${q.Qno}" data-question="${q.Question}">
+                    Edit
+                  </button>
+                  <button type="button" class="action-button delete-btn" data-qno="${q.Qno}">
+                    Delete
+                  </button>
+                </td>
+              `;
+              taskList.appendChild(row);
+            });
+
+            // Attach event listeners for Edit/Delete
+            attachEditDeleteHandlers();
+          } catch (error) {
+            console.error(error);
+            alert("Error loading questions. Please try again.");
+          }
+        }
+
+        // 3. Add Question
+        addQuestionBtn.addEventListener("click", async () => {
+          const skillId = skillSelect.value;
+          if (!skillId) {
+            alert("Please select a skill first!");
+            return;
+          }
+          const questionText = prompt("Enter the new question:");
+          if (!questionText) return; // user canceled or empty
+
+          // Send to backend (POST)
+          try {
+            const response = await fetch("/api/evaluation-questions", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                skill_id: skillId,
+                question: questionText
+              })
+            });
+            if (!response.ok) throw new Error("Failed to add question");
+            await loadQuestionsForSkill(skillId);
+          } catch (err) {
+            console.error(err);
+            alert("Error adding question. Please try again.");
+          }
+        });
+
+        // 4. Edit & Delete Handlers
+        function attachEditDeleteHandlers() {
+          // Edit
+          document.querySelectorAll(".edit-btn").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+              const qno = btn.getAttribute("data-qno");
+              const oldQuestion = btn.getAttribute("data-question");
+              const newQuestion = prompt("Edit Question:", oldQuestion);
+              if (!newQuestion || newQuestion === oldQuestion) return; // canceled or no change
+
+              try {
+                const response = await fetch(`/api/evaluation-questions/${qno}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ question: newQuestion })
+                });
+                if (!response.ok) throw new Error("Failed to edit question");
+                // Reload questions
+                await loadQuestionsForSkill(skillSelect.value);
+              } catch (err) {
+                console.error(err);
+                alert("Error editing question. Please try again.");
+              }
+            });
+          });
+
+          // Delete
+          document.querySelectorAll(".delete-btn").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+              const qno = btn.getAttribute("data-qno");
+              if (!confirm("Are you sure you want to delete this question?")) return;
+
+              try {
+                const response = await fetch(`/api/evaluation-questions/${qno}`, {
+                  method: "DELETE"
+                });
+                if (!response.ok) throw new Error("Failed to delete question");
+                // Reload questions
+                await loadQuestionsForSkill(skillSelect.value);
+              } catch (err) {
+                console.error(err);
+                alert("Error deleting question. Please try again.");
+              }
+            });
+          });
+        }
+
+        // 5. Handle form submission (optional)
+        const form = document.getElementById("evaluation-form");
+        form.addEventListener("submit", (event) => {
+          event.preventDefault();
+          alert("Form submitted! (Implement your own logic.)");
+        });
+      });
+    </script>
+  </body>
+</html>

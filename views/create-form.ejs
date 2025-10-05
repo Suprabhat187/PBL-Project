@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Evaluation Form</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Create New Evaluation Form</h2>
+        
+        <form id="createForm" action="/add-skill" method="POST" enctype="multipart/form-data">
+            <label for="skillName">Skill Name:</label>
+            <input type="text" id="skillName" name="skillName" required>
+            
+            <label for="questionFile">Upload Questions (Excel):</label>
+            <input type="file" id="questionFile" name="questionFile" accept=".xlsx, .xls" required>
+            
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('createForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            
+            const skillName = document.getElementById('skillName').value.trim();
+            const fileInput = document.getElementById('questionFile');
+            
+            if (!skillName) {
+                alert('Please enter a skill name.');
+                return;
+            }
+            
+            if (!fileInput.files.length) {
+                alert('Please upload an Excel file with questions.');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            try {
+                const response = await fetch('/add-skill', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.text();
+                alert(result);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the form.');
+            }
+        });
+    </script>
+</body>
+</html>

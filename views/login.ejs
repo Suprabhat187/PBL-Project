@@ -1,57 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/login.css" />
     <style>
-        /* Add some basic styles for better spacing and layout */
-        .login-section select {
-            width: 100%; /* Full width for the dropdown */
-            padding: 10px; /* Padding for the dropdown */
-            margin: 10px 0; /* Space between elements */
-            border: 1px solid #ccc; /* Border for the dropdown */
-            border-radius: 5px; /* Rounded corners for the dropdown */
-            font-size: 16px; /* Font size */
-        }
+      .role-dropdown {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+      .role-dropdown label {
+        font-size: 14px;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+      }
+      .role-select {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        outline: none;
+        background: #f3f3f3;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- Left Section (Login Form) -->
-        <div class="login-section">
-            <img src="/images/cllg.png" alt="Logo" class="logo">
-            <h2>Log in to your account</h2>
-
-            <% if (error) { %>
-                <p class="error-message"><%= error %></p>
-            <% } %>
-
-            <form action="/login" method="POST">
-                <% if (typeof error !== "undefined" && error) { %>
-                    <p class="error-message"><%= error %></p>
-                <% } %>
-                <input type="text" name="username" placeholder="Enter your name" required>
-                <input type="password" name="password" placeholder="Enter password" required>
-                
-                <!-- Dropdown for Role Selection -->
-                <select name="role" required>
-                    <option value="" disabled selected>Select your role</option>
-                    <option value="admin">Admin</option>
-                    <option value="faculty">Faculty</option>
-                    <option value="coordinator">Coordinator</option>
-                    <option value="HOD">HOD</option>
-                </select>
-                
-                <button type="submit" class="login-btn">Log In</button>
-            </form>            
+      <!-- Left Section (Login Form) -->
+      <div class="login-section">
+        <img src="/images/symbilogo.jpg" alt="Logo" class="logo" />
+        <h2>Log in to your account</h2>
+        <form id="loginForm">
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter password"
+            required
+          />
+          <!-- Role Selection Dropdown -->
+          <div class="role-dropdown">
+            <label for="role">Select Role</label>
+            <select id="role" name="role" class="role-select" required>
+              <option value="faculty">Faculty</option>
+              <option value="admin">Admin</option>
+              <option value="coordinator">Coordinator</option>
+            </select>
             
-            <p>Don’t have an account? <a href="#">Create an account</a></p>
-        </div>
-
-        <!-- Right Section (Illustration) -->
-        <div class="illustration-section"></div>
+          </div>
+          <div class="options">
+            <label class="remember-me">
+              <input type="checkbox" name="rememberMe" /> Remember Me
+            </label>
+            <a href="<%= forgotPasswordLink %>">Forgot Password?</a>
+          </div>
+          <button type="submit" class="login-btn">Log In</button>
+        </form>
+      </div>
+      <!-- Right Section (Illustration) -->
+      <div class="illustration-section"></div>
     </div>
-</body>
+
+    <!-- Client-side JavaScript -->
+    <script>
+      document.getElementById("loginForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const role = document.getElementById("role").value;
+
+    console.log("🔹 Sending Login Request:", { email, password, role });  // Debugging
+
+    fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, role }),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+        console.log("🔹 Server Response:", data);  // Debugging
+        if (data.token) {
+            localStorage.setItem("auth_token", data.token);
+            window.location.href = data.redirectUrl;
+        } else {
+            alert("Login failed: " + data.error);
+        }
+    })
+    .catch((err) => {
+        console.error("Error:", err);
+        alert("An error occurred during login.");
+    });
+});
+
+    </script>
+  </body>
 </html>
